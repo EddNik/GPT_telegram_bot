@@ -1,11 +1,10 @@
-import time
 
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CallbackQueryHandler, ContextTypes, CommandHandler, MessageHandler
 
 from gpt import ChatGptService
 from util import (load_message, send_text, send_image, show_main_menu, send_text_buttons,
-                  default_callback_handler, load_prompt, send_html)
+                   load_prompt)
 
 import credentials
 
@@ -13,9 +12,11 @@ async def default_callback_handler(update: Update,
                                    context: ContextTypes.DEFAULT_TYPE):
     await update.callback_query.answer()
     query = update.callback_query.data
-    if query == "rendom_button_1":
+    # if query == 'start':
+    #     await start(update, context)
+    if query == "random_btn_request":
         await random(update, context)
-    elif query == "rendom_button_2":
+    elif query == "random_btn_exit":
         await start(update, context)
     elif query == "gpt_button_1":
         await gpt(update, context)
@@ -45,7 +46,7 @@ async def random(update: Update, context: ContextTypes.DEFAULT_TYPE):
     prompt = load_prompt('random')
     content = await chat_gpt.send_question(prompt, 'Дай цікавий факт' )
     await send_text(update, context, content)
-    await send_text_buttons(update,context,content,{'rendom_button_1':'Give me facts', 'rendom_button_2':'Thanks, it is enough'})
+    await send_text_buttons(update,context,content,{'random_btn_request':'Give me more facts', 'random_btn_exit':'Exit'})
 
 async def gpt(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = load_message('gpt')
@@ -77,25 +78,23 @@ async def talk(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await show_main_menu(update, context, {
         'talk': 'Поговорити з відомою особистістю ��',
             })
-    content = await chat_gpt.send_question(prompt, 'Дай цікавий факт')
+    # content = await chat_gpt.send_question(prompt, 'Дай цікавий факт')
 
 
 
 
 
-# chat_gpt = ChatGptService('ChatGPT TOKEN')
 chat_gpt = ChatGptService(credentials.ChatGPT_TOKEN)
-# app = ApplicationBuilder().token('Telegram TOKEN').build()
-app = ApplicationBuilder().token(credentials.BOT_TOKEN).build()
+bot = ApplicationBuilder().token(credentials.BOT_TOKEN).build()
 
 # Зареєструвати обробник команди можна так:
 # app.add_handler(CommandHandler('command', handler_func))
-app.add_handler(CommandHandler('start', start))
-app.add_handler(CommandHandler('random', random))
-app.add_handler(CommandHandler('gpt', gpt))
-app.add_handler(CommandHandler('talk', talk))
+bot.add_handler(CommandHandler('start',start))
+bot.add_handler(CommandHandler('random', random))
+bot.add_handler(CommandHandler('gpt', gpt))
+bot.add_handler(CommandHandler('talk', talk))
 
 # Зареєструвати обробник колбеку можна так:
-# app.add_handler(CallbackQueryHandler(app_button, pattern='^app_.*'))
-app.add_handler(CallbackQueryHandler(default_callback_handler))
-app.run_polling()
+# app.add_handler(CallbackQueryHandler(app_button, pattern='^bot_.*'))
+bot.add_handler(CallbackQueryHandler(default_callback_handler))
+bot.run_polling()
