@@ -4,34 +4,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9e9e0498-e0bf-4195-9416-b7929e684b0c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/messages/thanksgiving.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/credentials.py" beforeDir="false" afterPath="$PROJECT_DIR$/credentials.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/messages/gpt.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/messages/gpt.txt" afterDir="false" />
-    </list>
+    <list default="true" id="9e9e0498-e0bf-4195-9416-b7929e684b0c" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GithubDefaultAccount">
     <option name="defaultAccountId" value="285d0356-7e34-4051-b66f-7a29b16427d1" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.bot.executor": "Run",
-    "Python.credentials.executor": "Run",
-    "Python.gpt.executor": "Debug",
-    "Python.util.executor": "Run",
-    "git-widget-placeholder": "work"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.bot.executor&quot;: &quot;Run&quot;,
+    &quot;Python.credentials.executor&quot;: &quot;Run&quot;,
+    &quot;Python.gpt.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.util.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;work&quot;
   }
-}]]></component>
+}</component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
