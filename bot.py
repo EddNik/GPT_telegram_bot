@@ -53,14 +53,13 @@ async def random(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def gpt(update: Update, context: ContextTypes.DEFAULT_TYPE):
     dialog.mode = "gpt"
-    # text = load_message('gpt')
     await send_image(update, context, 'gpt')
     text = update.message.text
     await update.message.reply_text(f"You sent: {text}. Wait for answer please.")
     await chat_gpt.add_message(text)
     answer = await chat_gpt.send_message_list()
     await send_text(update, context, answer)
-    await update.message.reply_text("Now type something else or exit.")
+    text = load_message('gpt')
     await send_text_buttons(update, context, text,
                             {'bot_gpt_btn_exit': 'Exit'})
 
