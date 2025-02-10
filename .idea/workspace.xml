@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9e9e0498-e0bf-4195-9416-b7929e684b0c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/resources/messages/thanksgiving.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/credentials.py" beforeDir="false" afterPath="$PROJECT_DIR$/credentials.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/messages/gpt.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/messages/gpt.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +26,8 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Python.bot.executor": "Run",
+    "Python.credentials.executor": "Run",
+    "Python.gpt.executor": "Debug",
     "Python.util.executor": "Run",
     "git-widget-placeholder": "work"
   }
@@ -32,5 +37,16 @@
   </component>
   <component name="TaskManager">
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/bot.py</url>
+          <line>123</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
