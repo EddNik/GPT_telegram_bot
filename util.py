@@ -1,5 +1,5 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Message, \
-    BotCommand, MenuButtonCommands, BotCommandScopeChat, MenuButtonDefault
+    BotCommand, MenuButtonCommands, BotCommandScopeChat, MenuButtonDefault, MenuButtonWebApp, MenuButton
 from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
@@ -47,7 +47,6 @@ async def send_text_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE,
         update.effective_message.chat_id,
         text=text, reply_markup=reply_markup,
         message_thread_id=update.effective_message.message_thread_id)
-
 
 # надсилає в чат фото
 async def send_image(update: Update, context: ContextTypes.DEFAULT_TYPE,
@@ -100,4 +99,12 @@ async def default_callback_handler(update: Update,
 
 
 class Dialog:
-    pass
+    def __init__(self, mode):
+        self.mode = mode
+
+    def get_name(self):
+        return self.mode
+
+    def set_name(self, mode):
+        self.mode = mode
+
