@@ -48,6 +48,7 @@ async def send_text_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE,
         text=text, reply_markup=reply_markup,
         message_thread_id=update.effective_message.message_thread_id)
 
+
 # надсилає в чат фото
 async def send_image(update: Update, context: ContextTypes.DEFAULT_TYPE,
                      name: str) -> Message:
@@ -79,9 +80,6 @@ def load_message(name):
     with open("resources/messages/" + name + ".txt", "r",
               encoding="utf8") as file:
         return file.read()
-# def load_request(update: Update, context: ContextTypes.DEFAULT_TYPE):
-#     request = update.message.text
-#     return request
 
 
 # завантажує промпт з папки /resources/messages/
