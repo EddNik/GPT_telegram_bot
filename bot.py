@@ -1,10 +1,6 @@
-from os import remove
-
-from httpx import delete
 from telegram import Update
 from telegram.ext import (ApplicationBuilder, CallbackQueryHandler, ContextTypes, CommandHandler, MessageHandler,
-    filters, ConversationHandler, CallbackContext)
-
+    filters)
 
 from gpt import ChatGptService
 from util import (load_message, send_text, send_image, show_main_menu, send_text_buttons,
@@ -13,9 +9,9 @@ from util import (load_message, send_text, send_image, show_main_menu, send_text
 import credentials
 
 result, total = 0, 0
-dialog = Dialog('_','_')
+dialog = Dialog('start','undefined')
 
-'''main menu'''
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global result, total
     result, total = 0, 0
@@ -33,9 +29,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # 'command': 'button text'
     })
 
-'''query random fact'''
+
 async def random(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # print(update.message.text)
     dialog.set_mode('random')
     text = load_message('random')
     await send_image(update, context,'random')
@@ -45,12 +40,13 @@ async def random(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_text_buttons(update, context, content,
                             {'random_btn_request': 'Хочу ще факт', 'exit_btn': 'Закінчити'})
 
-'''Free Conversation with GPT'''
+
 async def gpt(update: Update, context: ContextTypes.DEFAULT_TYPE):
     dialog.set_mode('gpt')
     await send_image(update, context, 'gpt')
     text = load_message('gpt')
     await send_text(update, context, text)
+
 
 async def talk(update: Update, context: ContextTypes.DEFAULT_TYPE):
     dialog.set_mode('talk')
@@ -68,7 +64,8 @@ async def talk(update: Update, context: ContextTypes.DEFAULT_TYPE):
                              'talk_tolkien': 'Джон Толкін'
                              })
 
-'''Checking who I'm connected to in a conversation'''
+
+# Checking who I'm connected to in a conversation
 async def talk_conversation(update: Update, context: ContextTypes.DEFAULT_TYPE):
     answer = await chat_gpt.add_message('Hello. Tell me your name?')
     await send_text(update, context, answer)
@@ -90,15 +87,13 @@ async def quiz(update: Update, context: ContextTypes.DEFAULT_TYPE):
                                  })
 
 
-'''text of the user's request for GPT processing'''
+# text of the user's requests for GPT processing
 async def handler_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     mode = dialog.get_mode()
-    # topic = dialog.get_topic()
 
-# if you type request to GPT you will back to query fact. You can send request only by button
-    if mode == 'random':
-        await update.message.reply_text(f"Ти вів текст: {text}. Користуйся кнопкою.")
+    if mode == 'random':  #You can send request only by button
+        await update.message.reply_text(f"Ти ввів текст: {text}. Користуйся кнопкою.")
         return
     elif mode == 'gpt':
         content = await chat_gpt.add_message(text)
@@ -121,26 +116,33 @@ async def handler_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await send_text_buttons(update, context, answer,
                                 {'talk_more':'Вибрати іншу особистість','exit_btn': 'Закінчити'})
 
-'''Bot buttons processing talk/random/quiz/Закінчити'''
+
+# Bot buttons processing talk/random/quiz/Закінчити
 async def button_talk(update: Update,
                  context: ContextTypes.DEFAULT_TYPE):
     await update.callback_query.answer()
     query = update.callback_query.data
+
     if query == 'talk_more':
         await talk(update,context)
         return
+
     await send_image(update, context, f'{query}')
     chat_gpt.set_prompt(load_prompt(f'{query}'))
 
-    await talk_conversation(update, context) #Checking who I'm connected to in a conversation
+    # Checking who I'm connected to in a conversation
+    await talk_conversation(update, context)
+
 
 async def button_exit(update: Update,
                              context: ContextTypes.DEFAULT_TYPE):
     await start(update, context)
 
+
 async def button_random(update: Update,
                  context: ContextTypes.DEFAULT_TYPE):
     await random(update, context)
+
 
 async def button_quiz(update: Update,
                  context: ContextTypes.DEFAULT_TYPE):
