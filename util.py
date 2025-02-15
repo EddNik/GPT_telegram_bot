@@ -99,12 +99,23 @@ async def default_callback_handler(update: Update,
 
 
 class Dialog:
-    def __init__(self, mode):
+    def __init__(self, mode,query_topic):
         self.mode = mode
+        self.query_topic = query_topic
 
-    def get_name(self):
+    def get_mode(self):
         return self.mode
 
-    def set_name(self, mode):
+    def get_topic(self):
+        return self.query_topic
+
+    def set_mode(self, mode):
+        # command_name = list(mode)
+        # del command_name[0]
+        # func_name = ''.join(command_name)
+        # self.mode = func_name
         self.mode = mode
+
+    def set_topic(self, query_topic):
+        self.query_topic = query_topic
 
