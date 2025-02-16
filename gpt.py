@@ -1,3 +1,6 @@
+import sys
+import traceback
+
 from openai import OpenAI
 import httpx as httpx
 
@@ -6,7 +9,7 @@ class ChatGptService:
     client: OpenAI = None
     message_list: list = None
 
-
+try:
     def __init__(self, token):
         token = "sk-proj-" + token[:3:-1] if token.startswith('gpt:') else token
         self.client = OpenAI(
@@ -14,6 +17,13 @@ class ChatGptService:
             http_client=httpx.Client(),
             api_key=token)
         self.message_list = []
+
+except  AttributeError:
+    tb = sys.exc_info()[2]
+    error_message = traceback.format_tb(tb)
+    print(error_message)
+    for line in error_message:
+        print(line, end="")
 
 
     async def send_message_list(self) -> str:

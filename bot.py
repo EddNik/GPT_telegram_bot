@@ -1,3 +1,7 @@
+import sys
+import traceback
+from inspect import Traceback
+
 from telegram import Update
 from telegram.ext import (ApplicationBuilder, CallbackQueryHandler, ContextTypes, CommandHandler, MessageHandler,
     filters)
@@ -5,12 +9,38 @@ from telegram.ext import (ApplicationBuilder, CallbackQueryHandler, ContextTypes
 from gpt import ChatGptService
 from util import (load_message, send_text, send_image, show_main_menu, send_text_buttons,
                   load_prompt, Dialog)
+from dotenv import load_dotenv
 
 import credentials
+import os
+import openai
+import logging
+
+# Setting bot token environments from .env file
+load_dotenv()
+
+telegram_token = ''
+try:
+    telegram_token = os.environ.get('BOT_TOKEN')
+except KeyError as e:
+    print(f"{e} variable does not exist. Please set the {e} environment variable")
+
+try:
+    openai.api_key = os.environ.get('ChatGPT_TOKEN')
+
+except  TypeError as e:
+    print(f"{e} variable does not exist. Please set the {e} environment variable")
+
+# print(telegram_token, openai.api_key)
+# Logging:
+# logging.basicConfig(
+#     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+# )
+
+
 
 result, total = 0, 0
 dialog = Dialog('start','undefined')
-
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     global result, total
@@ -165,8 +195,8 @@ async def button_quiz(update: Update,
         await send_text(update, context, content)
 
 
-chat_gpt = ChatGptService(credentials.ChatGPT_TOKEN)
-bot = ApplicationBuilder().token(credentials.BOT_TOKEN).build()
+chat_gpt = ChatGptService(openai.api_key)
+bot = ApplicationBuilder().token(telegram_token).build()
 
 # Зареєструвати обробник команди можна так:
 bot.add_handler(CommandHandler('start',start))
