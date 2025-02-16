@@ -1,11 +1,10 @@
-# GPT_telegram_bot
-Telegram-bot з підключенням ChatGPT.  
+# Edd-Bot_GPT
+Edd-Bot_GPT bot is a simple and easy-to-use conversational AI-assistant. 
+It provides the ability to interact with the bot, ask any questions, communicate with some famous people, 
+and play a quiz on three topics.
+
+## Features
+Selection peple for conversation and topic to for quiz
+A way to calculate test scores and reset them when needed
 
 
- Наявність файлу readme
-- Наявність файлу requirements.txt
-- Використання ConversationHandler
-- Використання змінних середовища (для зберігання токенів)
-- Логування
-- Розгортання проекту на сервері (ngrok, pythonanywhere, glitch або ін.)
-- Використання технологій, які не розглядалися в першому модулі
