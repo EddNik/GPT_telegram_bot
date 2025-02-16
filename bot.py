@@ -92,8 +92,9 @@ async def handler_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     mode = dialog.get_mode()
 
-    if mode == 'random':  #You can send request only by button
-        await update.message.reply_text(f"Ти ввів текст: {text}. Користуйся кнопкою.")
+    # You can send request only by button
+    if mode == 'random' or mode == 'start':
+        await update.message.reply_text(f"Ти ввів текст: {text}.  Користуйся кнопками або командами.")
         return
     elif mode == 'gpt':
         content = await chat_gpt.add_message(text)
@@ -102,6 +103,9 @@ async def handler_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif mode == 'quiz':
         global total, result
         total += 1
+        if total > 3 and result == 0 :
+            await update.message.reply_text('Кількість спроб використано. Скористуйся кнопкою щоб отримати інше питання')
+            return
         content = await chat_gpt.add_prompt_message(load_prompt('quiz_add_prompt'), text)
         if content == 'Правильно!':
             result += 1
@@ -109,10 +113,11 @@ async def handler_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                                 {'quiz_more': 'Ще питання на обрану тему', 'quiz_change': 'Змінити тему','exit_btn': 'Закінчити'})
         await send_image(update, context, 'score')
         await update.message.reply_text(f'Загальна кількість питань : {total}, Правильних відповідей : {result}')
-    else:
+
+
+    elif mode == 'talk':
         text = update.message.text
         answer = await chat_gpt.add_message(text)
-        await send_text(update, context, answer)
         await send_text_buttons(update, context, answer,
                                 {'talk_more':'Вибрати іншу особистість','exit_btn': 'Закінчити'})
 
