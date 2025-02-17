@@ -95,7 +95,7 @@ async def default_callback_handler(update: Update,
     query = update.callback_query.data
     await send_html(update, context, f'You have pressed button with {query} callback')
 
-
+#Створює об'єкт що контролює в якому стані знаходиться бот а також яка тема розглядається у разі квізу
 class Dialog:
     def __init__(self, mode,query_topic):
         self.mode = mode
@@ -108,10 +108,6 @@ class Dialog:
         return self.query_topic
 
     def set_mode(self, mode):
-        # command_name = list(mode)
-        # del command_name[0]
-        # func_name = ''.join(command_name)
-        # self.mode = func_name
         self.mode = mode
 
     def set_topic(self, query_topic):
