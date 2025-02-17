@@ -21,12 +21,12 @@ logging.basicConfig(
     filename= 'bot_quiz.log', filemode="a", format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
 
-result, total = 0, 0
+result_quiz, total_quiz = 0, 0
 dialog = Dialog('start','undefined')
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    global result, total
-    result, total = 0, 0
+    global result_quiz, total_quiz
+    result_quiz, total_quiz = 0, 0
     dialog.set_mode('start')
     text = load_message('main')
     await send_image(update, context, 'main')
@@ -113,18 +113,18 @@ async def handler_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await send_text_buttons(update, context, content,
                                 {'exit_btn': 'Закінчити'})
     elif mode == 'quiz':
-        global total, result
-        total += 1
-        if total > 3 and result == 0 :
+        global total_quiz, result_quiz
+        total_quiz += 1
+        if total_quiz > 3 and result_quiz == 0 :
             await update.message.reply_text('Кількість спроб використано. Скористуйся кнопкою щоб отримати інше питання')
             return
         content = await chat_gpt.add_prompt_message(load_prompt('quiz_add_prompt'), text)
         if content == 'Правильно!':
-            result += 1
+            result_quiz += 1
         await send_text_buttons(update, context, content,
                                 {'quiz_more': 'Ще питання на обрану тему', 'quiz_change': 'Змінити тему','exit_btn': 'Закінчити'})
         await send_image(update, context, 'score')
-        await update.message.reply_text(f'Загальна кількість питань : {total}, Правильних відповідей : {result}')
+        await update.message.reply_text(f'Загальна кількість питань : {total_quiz}, Правильних відповідей : {result_quiz}')
 
 
     elif mode == 'talk':
