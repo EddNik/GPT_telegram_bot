@@ -6,6 +6,7 @@ and play a quiz on three topics.
 ## Features
 Selection peple for conversation and topic to for quiz
 A way to calculate test scores and reset them when needed
+Logging is in file bot_quiz.log
 
 ## Requirements
 Python 3.x installed
@@ -40,8 +41,3 @@ Windows:
 8. To add a new environment variable:
 * Choose "New"
 * Enter the variable "Name" and "Value".
-
-
-bot.py file:
-* os.environ["BOT_TOKEN"] = "your Telegram Bot Token"
-* os.environ["ChatGPT_TOKEN"] = "Your OpenAI API Key"
