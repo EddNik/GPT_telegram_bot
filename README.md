@@ -24,9 +24,10 @@ Install necessary Python packages using the requirements.txt file
 
 ###### ChatGPT_TOKEN: Your OpenAI API Key, which can be found on the OpenAI Dashboard.
 
+#### Usage
 
-### Usage
 PyCharm:
+
 set in .env file:
 * BOT_TOKEN="your_telegram_token"
 * ChatGPT_TOKEN="your_openai_token"
