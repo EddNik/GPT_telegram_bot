@@ -36,7 +36,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         'random': 'Дізнатися випадковий цікавий факт 🧠',
         'gpt': 'Задати питання чату GPT 🤖',
         'talk': 'Поговорити з відомою особистістю 👤',
-        'quiz': 'Взяти участь у квізі ❓'
+        'quiz': 'Взяти участь у квізі ❓',
+        'translator': 'Перекласти іншою мовою'
         # Додати команду в меню можна так:
         # 'command': 'button text'
     })
@@ -84,19 +85,31 @@ async def talk_conversation(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def quiz(update: Update, context: ContextTypes.DEFAULT_TYPE):
-        dialog.set_mode('quiz')
-        text = load_message('quiz')
-        await send_image(update, context, 'quiz')
-        await show_main_menu(update, context, {
-            'quiz': 'Обери тему',
-            'start': 'Головне меню'
-        })
-        await send_text_buttons(update, context, text,
-                                {'quiz_prog': 'Тема програмування',
-                                 'quiz_math': 'Тема математичних теорій',
-                                 'quiz_biology': 'Тема біології ',
-                                 'exit_btn': 'Закінчити'
-                                 })
+    dialog.set_mode('quiz')
+    text = load_message('quiz')
+    await send_image(update, context, 'quiz')
+    await show_main_menu(update, context, {
+        'quiz': 'Обери тему',
+        'start': 'Головне меню'
+    })
+    await send_text_buttons(update, context, text,
+                             {'quiz_prog': 'Тема програмування',
+                            'quiz_math': 'Тема математичних теорій',
+                             'quiz_biology': 'Тема біології ',
+                             'exit_btn': 'Закінчити'
+                            })
+async def translator(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    dialog.set_mode('translator')
+    await show_main_menu(update, context, {
+        'translator': 'Перекласти іншою мовою',
+        'start': 'Головне меню'
+    })
+    await send_text_buttons(update, context, 'Оберіть мову',
+                            {'lang_english': 'перекласти англійською мовою',
+                             'lang_german': 'перекласти німецькою мовою',
+                             'lang_french': 'перекласти французькою мовою',
+                             'exit_btn': 'Закінчити'
+                             })
 
 
 # text of the user's requests for GPT processing
@@ -106,17 +119,20 @@ async def handler_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # You can send request only by button
     if mode == 'random' or mode == 'start':
-        await update.message.reply_text(f"Ти ввів текст: {text}.  Користуйся кнопками або командами.")
+        await update.message.reply_text(f"Ти ввів текст: \"{text}\".\nКористуйся кнопками або командами.")
         return
+
     elif mode == 'gpt':
         content = await chat_gpt.add_message(text)
         await send_text_buttons(update, context, content,
                                 {'exit_btn': 'Закінчити'})
+
     elif mode == 'quiz':
         global total_quiz, result_quiz
         total_quiz += 1
         if total_quiz > 3 and result_quiz == 0 :
-            await update.message.reply_text('Кількість спроб використано. Скористуйся кнопкою щоб отримати інше питання')
+            await update.message.reply_text('Кількість спроб використано.\nСкористуйся кнопкою щоб отримати інше '
+                                            'питання або змінити тему')
             return
         content = await chat_gpt.add_prompt_message(load_prompt('quiz_add_prompt'), text)
         if content == 'Правильно!':
@@ -124,14 +140,20 @@ async def handler_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await send_text_buttons(update, context, content,
                                 {'quiz_more': 'Ще питання на обрану тему', 'quiz_change': 'Змінити тему','exit_btn': 'Закінчити'})
         await send_image(update, context, 'score')
-        await update.message.reply_text(f'Загальна кількість питань : {total_quiz}, Правильних відповідей : {result_quiz}')
-
+        await update.message.reply_text(f'Загальна кількість питань : {total_quiz},\nПравильних відповідей : {result_quiz}')
 
     elif mode == 'talk':
         text = update.message.text
         answer = await chat_gpt.add_message(text)
         await send_text_buttons(update, context, answer,
                                 {'talk_more':'Вибрати іншу особистість','exit_btn': 'Закінчити'})
+
+    elif mode == 'translator':
+        text = update.message.text
+        answer = await chat_gpt.add_message(text)
+        await send_text_buttons(update, context, answer,
+                                {'lang_more': 'Вибрати іншу мову', 'exit_btn': 'Закінчити'})
+
 
 
 # Bot buttons processing talk/random/quiz/Закінчити
@@ -176,6 +198,16 @@ async def button_quiz(update: Update,
         content = await chat_gpt.send_question(load_prompt('quiz'), f'{query_in}')
         await send_text(update, context, content)
 
+async def button_lang(update: Update,
+                 context: ContextTypes.DEFAULT_TYPE):
+    await update.callback_query.answer()
+    query = update.callback_query.data
+
+    if query == 'lang_more':
+        await translator(update,context)
+        return
+    content = await chat_gpt.send_question(load_prompt('translator'), f'{query}')
+    await send_text(update, context, content)
 
 chat_gpt = ChatGptService(openai.api_key)
 bot = ApplicationBuilder().token(telegram_token).build()
@@ -186,6 +218,7 @@ bot.add_handler(CommandHandler('random', random))
 bot.add_handler(CommandHandler('gpt', gpt))
 bot.add_handler(CommandHandler('talk', talk))
 bot.add_handler(CommandHandler('quiz', quiz))
+bot.add_handler(CommandHandler('translator', translator))
 
 bot.add_handler(MessageHandler(filters.TEXT, callback=handler_message))
 
@@ -193,5 +226,6 @@ bot.add_handler(MessageHandler(filters.TEXT, callback=handler_message))
 bot.add_handler(CallbackQueryHandler(button_talk, pattern='^talk_.*'))
 bot.add_handler(CallbackQueryHandler(button_random, pattern='^random_.*'))
 bot.add_handler(CallbackQueryHandler(button_quiz, pattern='^quiz_.*'))
+bot.add_handler(CallbackQueryHandler(button_lang, pattern='^lang_.*'))
 bot.add_handler(CallbackQueryHandler(button_exit, pattern='exit_btn'))
 bot.run_polling()
