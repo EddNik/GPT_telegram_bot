@@ -112,7 +112,6 @@ async def translator(update: Update, context: ContextTypes.DEFAULT_TYPE):
                              })
 
 
-
 # text of the user's requests for GPT processing
 async def handler_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
@@ -120,7 +119,7 @@ async def handler_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # You can send request only by button
     if mode == 'random' or mode == 'start':
-        await update.message.reply_text(f"Ти ввів текст: {text}.  Користуйся кнопками або командами.")
+        await update.message.reply_text(f"Ти ввів текст: \"{text}\".\nКористуйся кнопками або командами.")
         return
 
     elif mode == 'gpt':
@@ -132,7 +131,8 @@ async def handler_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         global total_quiz, result_quiz
         total_quiz += 1
         if total_quiz > 3 and result_quiz == 0 :
-            await update.message.reply_text('Кількість спроб використано. Скористуйся кнопкою щоб отримати інше питання')
+            await update.message.reply_text('Кількість спроб використано.\nСкористуйся кнопкою щоб отримати інше '
+                                            'питання або змінити тему')
             return
         content = await chat_gpt.add_prompt_message(load_prompt('quiz_add_prompt'), text)
         if content == 'Правильно!':
@@ -140,7 +140,7 @@ async def handler_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await send_text_buttons(update, context, content,
                                 {'quiz_more': 'Ще питання на обрану тему', 'quiz_change': 'Змінити тему','exit_btn': 'Закінчити'})
         await send_image(update, context, 'score')
-        await update.message.reply_text(f'Загальна кількість питань : {total_quiz}, Правильних відповідей : {result_quiz}')
+        await update.message.reply_text(f'Загальна кількість питань : {total_quiz},\nПравильних відповідей : {result_quiz}')
 
     elif mode == 'talk':
         text = update.message.text
